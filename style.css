@@ -1,0 +1,54 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "Courier New", monospace;
+  background: radial-gradient(circle, #0e0e1a, #000);
+  color: white;
+}
+
+#garden {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+#thoughtInput {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-bottom: 2px solid #fff;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  width: 300px;
+}
+
+button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #555;
+}
