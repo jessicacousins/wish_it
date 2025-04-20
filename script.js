@@ -48,13 +48,13 @@ function drawFlowerShape(flower) {
       canvas.height - (canvas.height - centerY) * (i / (leafCount + 1));
     const leafX = flower.x;
     const leafY = stemHeight;
-    const leafLength = 20;
-    const leafWidth = 10;
+    const leafLength = 30;
+    const leafWidth = 20;
 
-    const sway = Math.sin(time + flower.x * 0.01 + i) * 5; 
+    const sway = Math.sin(time + flower.x * 0.05 + i) * 5;
 
     ctx.beginPath();
-    const direction = i % 2 === 0 ? 1 : -1; 
+    const direction = i % 2 === 0 ? 1 : -1;
     ctx.moveTo(leafX, leafY);
     ctx.quadraticCurveTo(
       leafX + direction * (leafLength + sway),
@@ -96,7 +96,6 @@ function drawFlowerShape(flower) {
 
     ctx.fill();
   }
-
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, petalRadius * 0.2, 0, Math.PI * 2);
