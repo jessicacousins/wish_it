@@ -35,10 +35,45 @@ function drawFlowerShape(flower) {
   // stem
   ctx.beginPath();
   ctx.strokeStyle = "#3b6e3b";
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 7;
   ctx.moveTo(flower.x, canvas.height);
   ctx.lineTo(centerX, centerY);
   ctx.stroke();
+
+  // swaying leaves
+  const leafCount = 3;
+  const time = Date.now() * 0.002;
+  for (let i = 1; i <= leafCount; i++) {
+    const stemHeight =
+      canvas.height - (canvas.height - centerY) * (i / (leafCount + 1));
+    const leafX = flower.x;
+    const leafY = stemHeight;
+    const leafLength = 20;
+    const leafWidth = 10;
+
+    const sway = Math.sin(time + flower.x * 0.01 + i) * 5; 
+
+    ctx.beginPath();
+    const direction = i % 2 === 0 ? 1 : -1; 
+    ctx.moveTo(leafX, leafY);
+    ctx.quadraticCurveTo(
+      leafX + direction * (leafLength + sway),
+      leafY - leafWidth,
+      leafX + direction * (leafLength + sway),
+      leafY
+    );
+    ctx.quadraticCurveTo(
+      leafX + direction * (leafLength + sway),
+      leafY + leafWidth,
+      leafX,
+      leafY
+    );
+    ctx.fillStyle = "#4caf50";
+    ctx.fill();
+  }
+
+  //  flower rainbow
+  const isRainbow = /rainbow|dream|magic|hope|joy|color/i.test(flower.word);
 
   // petals
   for (let i = 0; i < petalCount; i++) {
@@ -54,16 +89,21 @@ function drawFlowerShape(flower) {
       x1,
       y1
     );
-    ctx.fillStyle = flower.color;
+
+    ctx.fillStyle = isRainbow
+      ? `hsl(${(i / petalCount) * 360}, 80%, 65%)`
+      : flower.color;
+
     ctx.fill();
   }
 
+
   ctx.beginPath();
   ctx.arc(centerX, centerY, petalRadius * 0.2, 0, Math.PI * 2);
-  ctx.fillStyle = "gold";
+  ctx.fillStyle = isRainbow ? "#fff" : "gold";
   ctx.fill();
 
-  // words content
+  // user words
   ctx.font = "12px Courier New";
   ctx.fillStyle = "white";
   ctx.fillText(
