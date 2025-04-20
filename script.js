@@ -47,9 +47,13 @@ function plantThought() {
   const input = document.getElementById("thoughtInput").value;
   if (!input) return;
 
+  const maxHeight = canvas.height * 0.7;
+  const minHeight = canvas.height * 0.3;
+
   const flower = {
     x: Math.random() * canvas.width,
-    y: canvas.height - 100,
+    targetY: Math.random() * (maxHeight - minHeight) + minHeight,
+    y: canvas.height,
     radius: 0,
     color: `hsl(${Math.random() * 360}, 70%, 60%)`,
     word: input,
@@ -68,14 +72,16 @@ function drawFlowerShape(flower) {
   const petalCount = 10;
   const petalRadius = flower.radius;
   const centerX = flower.x + Math.sin(flower.angle) * 10;
-  const centerY = flower.y - flower.radius;
+  // const centerY = flower.y - flower.radius;
+  const centerY = flower.targetY - flower.radius;
 
   // stem
+  // stem (up to targetY)
   ctx.beginPath();
   ctx.strokeStyle = "#3b6e3b";
   ctx.lineWidth = 7;
   ctx.moveTo(flower.x, canvas.height);
-  ctx.lineTo(centerX, centerY);
+  ctx.lineTo(centerX, flower.targetY);
   ctx.stroke();
 
   // swaying leaves
@@ -302,7 +308,14 @@ function animate() {
   flowers.forEach((flower) => {
     flower.radius += flower.growth;
     flower.angle += flower.sway;
-    flower.y -= flower.floatSpeed;
+
+    if (flower.y > flower.targetY) {
+      flower.y -= flower.floatSpeed;
+      if (flower.y < flower.targetY) {
+        flower.y = flower.targetY;
+      }
+    }
+
     if (flower.radius > 50) flower.radius = 50;
 
     drawFlowerShape(flower);
