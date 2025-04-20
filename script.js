@@ -3,9 +3,22 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+let mode = "night";
+
 let flowers = [];
 let fireflies = [];
 let butterflies = [];
+
+let stars = [];
+
+for (let i = 0; i < 80; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * (canvas.height * 0.6),
+    radius: Math.random() * 1.5 + 0.5,
+    opacity: Math.random() * 0.3 + 0.2,
+  });
+}
 
 // fireflies
 for (let i = 0; i < 20; i++) {
@@ -137,6 +150,47 @@ function drawFlowerShape(flower) {
   );
 }
 
+// ! sky with depth
+function drawSkyBackground() {
+  let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+
+  if (mode === "day") {
+    gradient.addColorStop(0, "#87ceeb");
+    gradient.addColorStop(0.5, "#bfefff");
+    gradient.addColorStop(1, "#e0f7fa");
+  } else {
+    gradient.addColorStop(0, "#0e0e1a");
+    gradient.addColorStop(0.5, "#1a1a2e");
+    gradient.addColorStop(1, "#000");
+  }
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (mode === "night") {
+    stars.forEach((star) => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+      ctx.fill();
+    });
+  }
+
+  if (mode === "day") {
+    for (let i = 0; i < 3; i++) {
+      const cx = (i * canvas.width) / 3 + 100;
+      const cy = 100 + Math.sin(Date.now() * 0.001 + i) * 10;
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 60, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx + 30, cy + 10, 50, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx - 30, cy + 10, 50, 20, 0, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.fill();
+    }
+  }
+}
+
 function drawFireflies() {
   const time = Date.now() * 0.002;
   fireflies.forEach((f) => {
@@ -241,6 +295,7 @@ function drawButterflies() {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  drawSkyBackground();
   drawFireflies();
   drawButterflies();
 
@@ -280,3 +335,7 @@ function playWhisper(word) {
 }
 
 animate();
+
+function toggleMode() {
+  mode = mode === "day" ? "night" : "day";
+}
