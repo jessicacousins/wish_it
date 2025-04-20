@@ -4,6 +4,31 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let flowers = [];
+let fireflies = [];
+let butterflies = [];
+
+// fireflies
+for (let i = 0; i < 20; i++) {
+  fireflies.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 1.5 + 1.5,
+    vx: Math.random() * 1 - 0.5,
+    vy: Math.random() * 0.4 - 0.2,
+    glowPhase: Math.random(),
+  });
+}
+
+// butterflies
+for (let i = 0; i < 5; i++) {
+  butterflies.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: Math.random() * 3 - 1.5,
+    vy: Math.random() * 3 - 1.5,
+    flap: Math.random() * Math.PI * 2,
+  });
+}
 
 function plantThought() {
   const input = document.getElementById("thoughtInput").value;
@@ -112,8 +137,112 @@ function drawFlowerShape(flower) {
   );
 }
 
+function drawFireflies() {
+  const time = Date.now() * 0.002;
+  fireflies.forEach((f) => {
+    f.x += f.vx;
+    f.y += f.vy;
+    f.glowPhase += 0.02;
+
+    if (f.x < 0 || f.x > canvas.width) f.vx *= -1;
+    if (f.y < 0 || f.y > canvas.height) f.vy *= -1;
+
+    const glow = Math.sin(f.glowPhase) * 0.5 + 0.5;
+
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 150, ${glow})`;
+    ctx.fill();
+  });
+}
+
+function drawButterflies() {
+  butterflies.forEach((b) => {
+    b.x += b.vx;
+    b.y += b.vy;
+    b.flap += 0.2;
+
+    if (b.x < 0 || b.x > canvas.width) b.vx *= -1;
+    if (b.y < 0 || b.y > canvas.height) b.vy *= -1;
+
+    const flapAngle = Math.sin(b.flap) * 0.5;
+    const wingColor = ctx.createRadialGradient(b.x, b.y, 2, b.x, b.y, 14);
+    wingColor.addColorStop(0, "#ff8ff1");
+    wingColor.addColorStop(1, "#e03cd6");
+
+    //  upper left wing
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(flapAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-20, -10, -30, -30, -10, -40);
+    ctx.bezierCurveTo(-5, -30, -5, -10, 0, 0);
+    ctx.fillStyle = wingColor;
+    ctx.fill();
+    ctx.restore();
+
+    // upper right wing
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(-flapAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(20, -10, 30, -30, 10, -40);
+    ctx.bezierCurveTo(5, -30, 5, -10, 0, 0);
+    ctx.fillStyle = wingColor;
+    ctx.fill();
+    ctx.restore();
+
+    // lower left wing
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(flapAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(20, 10, 25, 25, 10, 30);
+    ctx.bezierCurveTo(-5, 20, -5, 10, 0, 0);
+    ctx.fillStyle = "#ff69b4";
+    ctx.fill();
+    ctx.restore();
+
+    // lower right wing
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(-flapAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-20, 10, -25, 25, -10, 30);
+    ctx.bezierCurveTo(5, 20, 5, 10, 0, 0);
+    ctx.fillStyle = "#ff69b4";
+    ctx.fill();
+    ctx.restore();
+
+    // body
+    ctx.beginPath();
+    ctx.moveTo(b.x, b.y - 10);
+    ctx.lineTo(b.x, b.y + 10);
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // antennae
+    ctx.beginPath();
+    ctx.moveTo(b.x, b.y - 10);
+    ctx.quadraticCurveTo(b.x - 3, b.y - 20, b.x - 6, b.y - 12);
+    ctx.moveTo(b.x, b.y - 10);
+    ctx.quadraticCurveTo(b.x + 3, b.y - 20, b.x + 6, b.y - 12);
+    ctx.strokeStyle = "#999";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+}
+
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawFireflies();
+  drawButterflies();
 
   flowers.forEach((flower) => {
     flower.radius += flower.growth;
