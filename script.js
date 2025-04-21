@@ -161,9 +161,9 @@ function drawSkyBackground() {
   let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
 
   if (mode === "day") {
-    gradient.addColorStop(0, "#87ceeb");
-    gradient.addColorStop(0.5, "#bfefff");
-    gradient.addColorStop(1, "#e0f7fa");
+    gradient.addColorStop(0, "#fcfaee");
+    gradient.addColorStop(0.2, "#87ceeb");
+    gradient.addColorStop(1, "#87ceeb");
   } else {
     gradient.addColorStop(0, "#0e0e1a");
     gradient.addColorStop(0.5, "#1a1a2e");
@@ -187,12 +187,12 @@ function drawSkyBackground() {
       const cx = (i * canvas.width) / 3 + 100;
       const cy = 100 + Math.sin(Date.now() * 0.001 + i) * 10;
 
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, 60, 20, 0, 0, Math.PI * 2);
-      ctx.ellipse(cx + 30, cy + 10, 50, 20, 0, 0, Math.PI * 2);
-      ctx.ellipse(cx - 30, cy + 10, 50, 20, 0, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-      ctx.fill();
+      // ctx.beginPath();
+      // ctx.ellipse(cx, cy, 60, 20, 0, 0, Math.PI * 2);
+      // ctx.ellipse(cx + 30, cy + 10, 50, 20, 0, 0, Math.PI * 2);
+      // ctx.ellipse(cx - 30, cy + 10, 50, 20, 0, 0, Math.PI * 2);
+      // ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      // ctx.fill();
     }
   }
 }
