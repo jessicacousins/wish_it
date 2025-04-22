@@ -43,6 +43,30 @@ for (let i = 0; i < 5; i++) {
   });
 }
 
+// function plantThought() {
+//   const input = document.getElementById("thoughtInput").value;
+//   if (!input) return;
+
+//   const maxHeight = canvas.height * 0.7;
+//   const minHeight = canvas.height * 0.3;
+
+//   const flower = {
+//     x: Math.random() * canvas.width,
+//     targetY: Math.random() * (maxHeight - minHeight) + minHeight,
+//     y: canvas.height,
+//     radius: 0,
+//     color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+//     word: input,
+//     angle: Math.random() * Math.PI * 2,
+//     growth: Math.random() * 1 + 0.5,
+//     sway: Math.random() * 0.05 + 0.01,
+//     floatSpeed: Math.random() * 0.5 + 0.2,
+//   };
+
+//   flowers.push(flower);
+//   playWhisper(input);
+//   document.getElementById("thoughtInput").value = "";
+// }
 function plantThought() {
   const input = document.getElementById("thoughtInput").value;
   if (!input) return;
@@ -64,6 +88,12 @@ function plantThought() {
   };
 
   flowers.push(flower);
+
+  // update flower count
+  document.getElementById(
+    "flowerCount"
+  ).textContent = `🌸 ${flowers.length} flowers`;
+
   playWhisper(input);
   document.getElementById("thoughtInput").value = "";
 }
@@ -76,7 +106,6 @@ function drawFlowerShape(flower) {
   const centerY = flower.targetY - flower.radius;
 
   // stem
-  // stem (up to targetY)
   ctx.beginPath();
   ctx.strokeStyle = "#3b6e3b";
   ctx.lineWidth = 7;
@@ -128,8 +157,8 @@ function drawFlowerShape(flower) {
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.quadraticCurveTo(
-      (centerX + x1) / 2 + Math.sin(angle) * petalRadius * 0.3,
-      (centerY + y1) / 2 - Math.cos(angle) * petalRadius * 0.3,
+      (centerX + x1) / 2 + Math.sin(angle) * petalRadius * 0.5,
+      (centerY + y1) / 2 - Math.cos(angle) * petalRadius * 0.5,
       x1,
       y1
     );

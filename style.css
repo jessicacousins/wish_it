@@ -54,3 +54,18 @@ button {
 button:hover {
   background: #555;
 }
+
+#flowerCount {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-family: "Courier New", monospace;
+  z-index: 10;
+  pointer-events: none;
+}
