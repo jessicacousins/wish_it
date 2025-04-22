@@ -90,9 +90,13 @@ function plantThought() {
   flowers.push(flower);
 
   // update flower count
-  document.getElementById(
-    "flowerCount"
-  ).textContent = `🌸 ${flowers.length} flowers`;
+  const numberEl = document.getElementById("flowerNumber");
+  numberEl.textContent = flowers.length;
+  numberEl.classList.add("animate");
+
+  setTimeout(() => {
+    numberEl.classList.remove("animate");
+  }, 300);
 
   playWhisper(input);
   document.getElementById("thoughtInput").value = "";
