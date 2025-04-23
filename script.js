@@ -8,6 +8,7 @@ let mode = "night";
 let flowers = [];
 let fireflies = [];
 let butterflies = [];
+let particles = [];
 
 let stars = [];
 
@@ -43,30 +44,26 @@ for (let i = 0; i < 5; i++) {
   });
 }
 
-// function plantThought() {
-//   const input = document.getElementById("thoughtInput").value;
-//   if (!input) return;
+function drawParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
 
-//   const maxHeight = canvas.height * 0.7;
-//   const minHeight = canvas.height * 0.3;
+    if (p.life <= 0) {
+      particles.splice(i, 1);
+      continue;
+    }
 
-//   const flower = {
-//     x: Math.random() * canvas.width,
-//     targetY: Math.random() * (maxHeight - minHeight) + minHeight,
-//     y: canvas.height,
-//     radius: 0,
-//     color: `hsl(${Math.random() * 360}, 70%, 60%)`,
-//     word: input,
-//     angle: Math.random() * Math.PI * 2,
-//     growth: Math.random() * 1 + 0.5,
-//     sway: Math.random() * 0.05 + 0.01,
-//     floatSpeed: Math.random() * 0.5 + 0.2,
-//   };
+    const alpha = p.life / 60;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${p.color}, ${alpha})`;
+    ctx.fill();
+  }
+}
 
-//   flowers.push(flower);
-//   playWhisper(input);
-//   document.getElementById("thoughtInput").value = "";
-// }
 function plantThought() {
   const input = document.getElementById("thoughtInput").value;
   if (!input) return;
@@ -86,6 +83,18 @@ function plantThought() {
     sway: Math.random() * 0.05 + 0.01,
     floatSpeed: Math.random() * 0.5 + 0.2,
   };
+
+  for (let i = 0; i < 20; i++) {
+    particles.push({
+      x: flower.x,
+      y: flower.targetY,
+      radius: Math.random() * 2 + 1,
+      vx: Math.cos(i) * (Math.random() * 2),
+      vy: Math.sin(i) * (Math.random() * 2),
+      color: mode === "day" ? "255,215,0" : "255,192,203",
+      life: 60,
+    });
+  }
 
   flowers.push(flower);
 
@@ -353,6 +362,7 @@ function animate() {
 
     drawFlowerShape(flower);
   });
+  drawParticles();
 
   requestAnimationFrame(animate);
 }
