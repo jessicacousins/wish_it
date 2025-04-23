@@ -76,12 +76,14 @@ function plantThought() {
     targetY: Math.random() * (maxHeight - minHeight) + minHeight,
     y: canvas.height,
     radius: 0,
-    color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+    // color: `hsl(${Math.floor(Math.random() * 80 + 20)}, 80%, 70%)`,
+    color: pickHappyColor(),
     word: input,
     angle: Math.random() * Math.PI * 2,
     growth: Math.random() * 1 + 0.5,
     sway: Math.random() * 0.05 + 0.01,
     floatSpeed: Math.random() * 0.5 + 0.2,
+    style: Math.random() < 0.5 ? "cute" : "classic",
   };
 
   for (let i = 0; i < 20; i++) {
@@ -98,27 +100,20 @@ function plantThought() {
 
   flowers.push(flower);
 
-  // update flower count
   const numberEl = document.getElementById("flowerNumber");
   numberEl.textContent = flowers.length;
   numberEl.classList.add("animate");
-
-  setTimeout(() => {
-    numberEl.classList.remove("animate");
-  }, 300);
+  setTimeout(() => numberEl.classList.remove("animate"), 300);
 
   playWhisper(input);
   document.getElementById("thoughtInput").value = "";
 }
 
 function drawFlowerShape(flower) {
-  const petalCount = 10;
   const petalRadius = flower.radius;
   const centerX = flower.x + Math.sin(flower.angle) * 10;
-  // const centerY = flower.y - flower.radius;
   const centerY = flower.targetY - flower.radius;
 
-  // stem
   ctx.beginPath();
   ctx.strokeStyle = "#3b6e3b";
   ctx.lineWidth = 7;
@@ -126,69 +121,73 @@ function drawFlowerShape(flower) {
   ctx.lineTo(centerX, flower.targetY);
   ctx.stroke();
 
-  // swaying leaves
-  const leafCount = 3;
+  const leafCount = 2;
   const time = Date.now() * 0.002;
   for (let i = 1; i <= leafCount; i++) {
     const stemHeight =
       canvas.height - (canvas.height - centerY) * (i / (leafCount + 1));
-    const leafX = flower.x;
-    const leafY = stemHeight;
-    const leafLength = 30;
-    const leafWidth = 20;
-
     const sway = Math.sin(time + flower.x * 0.05 + i) * 5;
+    const direction = i % 2 === 0 ? 1 : -1;
 
     ctx.beginPath();
-    const direction = i % 2 === 0 ? 1 : -1;
-    ctx.moveTo(leafX, leafY);
+    ctx.moveTo(flower.x, stemHeight);
     ctx.quadraticCurveTo(
-      leafX + direction * (leafLength + sway),
-      leafY - leafWidth,
-      leafX + direction * (leafLength + sway),
-      leafY
+      flower.x + direction * (30 + sway),
+      stemHeight - 20,
+      flower.x + direction * (30 + sway),
+      stemHeight
     );
     ctx.quadraticCurveTo(
-      leafX + direction * (leafLength + sway),
-      leafY + leafWidth,
-      leafX,
-      leafY
+      flower.x + direction * (30 + sway),
+      stemHeight + 20,
+      flower.x,
+      stemHeight
     );
     ctx.fillStyle = "#4caf50";
     ctx.fill();
   }
 
-  //  flower rainbow
   const isRainbow = /rainbow|dream|magic|hope|joy|color/i.test(flower.word);
+  const isCute = flower.style === "cute";
+  const petalCount = isCute ? 6 : 10;
 
-  // petals
   for (let i = 0; i < petalCount; i++) {
     const angle = (Math.PI * 2 * i) / petalCount + flower.angle;
     const x1 = centerX + Math.cos(angle) * petalRadius;
     const y1 = centerY + Math.sin(angle) * petalRadius;
 
     ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.quadraticCurveTo(
-      (centerX + x1) / 2 + Math.sin(angle) * petalRadius * 0.5,
-      (centerY + y1) / 2 - Math.cos(angle) * petalRadius * 0.5,
-      x1,
-      y1
-    );
+    if (isCute) {
+      ctx.ellipse(
+        x1,
+        y1,
+        petalRadius * 0.4,
+        petalRadius * 0.25,
+        angle,
+        0,
+        Math.PI * 2
+      );
+    } else {
+      ctx.moveTo(centerX, centerY);
+      ctx.quadraticCurveTo(
+        (centerX + x1) / 2 + Math.sin(angle) * petalRadius * 0.5,
+        (centerY + y1) / 2 - Math.cos(angle) * petalRadius * 0.5,
+        x1,
+        y1
+      );
+    }
 
     ctx.fillStyle = isRainbow
       ? `hsl(${(i / petalCount) * 360}, 80%, 65%)`
       : flower.color;
-
     ctx.fill();
   }
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, petalRadius * 0.2, 0, Math.PI * 2);
-  ctx.fillStyle = isRainbow ? "#fff" : "gold";
+  ctx.fillStyle = "#fff5c1";
   ctx.fill();
 
-  // user words
   ctx.font = "12px Courier New";
   ctx.fillStyle = "white";
   ctx.fillText(
@@ -394,4 +393,25 @@ animate();
 
 function toggleMode() {
   mode = mode === "day" ? "night" : "day";
+}
+
+// flower color array
+function pickHappyColor() {
+  const happyColors = [
+    "#FF69B4", // hot pink
+    "#FFB6C1", // light pink
+    "#FFD700", // gold
+    "#FFA500", // orange
+    "#FF6347", // tomato red
+    "#FF4500", // coral
+    "#EE82EE", // violet
+    "#DA70D6", // orchid
+    "#87CEFA", // sky blue
+    "#00BFFF", // deep sky blue
+    "#00CED1", // dark turquoise
+    "#7FFFD4", // aquamarine
+    "#ADFF2F", // green-yellow
+    "#FFFF99", // soft yellow
+  ];
+  return happyColors[Math.floor(Math.random() * happyColors.length)];
 }
