@@ -68,11 +68,13 @@ button:hover {
   font-family: "Courier New", monospace;
   z-index: 10;
   pointer-events: none;
+  letter-spacing: 2px;
 }
 
 #flowerNumber {
   display: inline-block;
   transition: transform 0.3s ease;
+  letter-spacing: 2px;
 }
 
 #flowerNumber.animate {
