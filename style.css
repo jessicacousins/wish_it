@@ -55,9 +55,22 @@ button:hover {
   background: #555;
 }
 
+#tagline {
+  font-size: 15px;
+  color: #ddd;
+  font-family: "Courier New", monospace;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 6px 14px;
+  border-radius: 10px;
+  align-items: center;
+  text-align: center;
+
+  letter-spacing: 1px;
+}
+
 #flowerCount {
   position: absolute;
-  top: 20px;
+  top: 50px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;
