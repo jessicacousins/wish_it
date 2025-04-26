@@ -88,6 +88,7 @@ button:hover {
   display: inline-block;
   transition: transform 0.3s ease;
   letter-spacing: 2px;
+  color: #ffd9ef;
 }
 
 #flowerNumber.animate {
