@@ -74,7 +74,7 @@ button:hover {
   left: 50%;
   transform: translateX(-50%);
   font-size: 18px;
-  color: white;
+  color: #ffd9ef;
   background: rgba(0, 0, 0, 0.4);
   padding: 8px 16px;
   border-radius: 12px;
